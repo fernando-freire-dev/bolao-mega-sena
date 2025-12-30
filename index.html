@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Conferência do Bolão - Mega-Sena</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0a5c2f;
+      padding: 20px;
+      color: #fff;
+    }
+
+    h1 {
+  text-align: center;
+  color: #fff;
+  }
+
+  h2 {
+  text-align: center;
+  color: #0a5c2f;
+}
+
+.numeros {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      color: #000;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .numeros input {
+      width: 45px;
+      padding: 6px;
+      margin: 4px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px;
+      width: 100%;
+      font-size: 18px;
+      background: #0a5c2f;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0e7a3f;
+    }
+
+    .bloco {
+      margin-top: 25px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .todos { background: #f4f4f4; }
+    .quadra { background: #cce5ff; }
+    .quina { background: #ffeeba; }
+    .sena { background: #d4edda; }
+
+    .jogo {
+      padding: 6px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .destaque {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🍀 Conferência do Bolão - Mega-Sena - 25/26</h1>
+
+  <div class="container">
+
+    <h2>Números Sorteados</h2>
+
+    <div class="numeros">
+      <input type="number" min="1" max="60" id="n1">
+      <input type="number" min="1" max="60" id="n2">
+      <input type="number" min="1" max="60" id="n3">
+      <input type="number" min="1" max="60" id="n4">
+      <input type="number" min="1" max="60" id="n5">
+      <input type="number" min="1" max="60" id="n6">
+    </div>
+
+    <button onclick="conferirBolao()">Conferir Bolão</button>
+
+    <div id="resultado"></div>
+
+  </div>
+
+  <script>
+    // 🔢 CADASTRE AQUI OS JOGOS
+    const jogos = [
+      [07,08,22,24,33,59]
+      // adicione seus 70 jogos aqui
+    ];
+
+    function formatarNumero(n) {
+  	return String(n).padStart(2, '0');
+    };
+
+    function conferirBolao() {
+
+      const resultado = [
+        Number(n1.value),
+        Number(n2.value),
+        Number(n3.value),
+        Number(n4.value),
+        Number(n5.value),
+        Number(n6.value)
+      ];
+
+      // 🔒 Bloquear campos vazios
+      if (resultado.includes(0)) {
+        alert("Preencha todos os números!");
+        return;
+      }
+
+      // 🔒 Bloquear números repetidos
+      const semRepeticao = new Set(resultado);
+      if (semRepeticao.size !== 6) {
+        alert("Não é permitido repetir números no resultado!");
+        return;
+      }
+
+      let htmlTodos = "<div class='bloco todos'><h2>Todos os Jogos</h2>";
+      let htmlQuadra = "<div class='bloco quadra'><h2>Quadra (4 acertos)</h2>";
+      let htmlQuina = "<div class='bloco quina'><h2>Quina (5 acertos)</h2>";
+      let htmlSena = "<div class='bloco sena'><h2>Sena (6 acertos)</h2>";
+
+      jogos.forEach((jogo, i) => {
+        const acertos = jogo.filter(n => resultado.includes(n)).length;
+
+	const jogoFormatado = jogo.map(n => formatarNumero(n)).join(", ");
+
+	const texto = `Jogo ${i + 1}: ${jogoFormatado} — ${acertos} acertos`;
+
+        //const texto = `Jogo ${i + 1}: ${jogo.join(", ")} — ${acertos} acertos`;
+
+        htmlTodos += `<div class="jogo ${acertos >= 4 ? 'destaque' : ''}">${texto}</div>`;
+
+        if (acertos === 4) {
+          htmlQuadra += `<div class="jogo">${texto}</div>`;
+        }
+        if (acertos === 5) {
+          htmlQuina += `<div class="jogo">${texto}</div>`;
+        }
+        if (acertos === 6) {
+          htmlSena += `<div class="jogo">${texto}</div>`;
+        }
+      });
+
+      htmlTodos += "</div>";
+      htmlQuadra += "</div>";
+      htmlQuina += "</div>";
+      htmlSena += "</div>";
+
+      document.getElementById("resultado").innerHTML =
+        htmlTodos + htmlQuadra + htmlQuina + htmlSena;
+    }
+  </script>
+
+</body>
+</html>
